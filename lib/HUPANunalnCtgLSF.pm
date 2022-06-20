@@ -9,8 +9,8 @@ sub getUnaln{
 use strict;
 use warnings;
 use Getopt::Std;
-use vars qw($opt_h $opt_p);
-getopts("hp:");
+use vars qw($opt_h $opt_s);
+getopts("hs:");
 
 my $usage="\nUsage: hupanLSF getUnalnCtg [options]  <assembly_directory> <QUAST_assess_directory> <output_directory>
 
@@ -21,15 +21,15 @@ Necessary input description:
   assembly_directory      <string>    This directory should contain many sub-directories
                                       named by sample names, such as sample1, sample2,etc.
                                       In each sub-directory, assembly results, including 
-                                      file *.contig, should exist.
+                                      file \"*.contig.gz\", should exist.
 
   QUAST_assess_directory  <string>    This directory should contain many sub-directories 
                                       named by sample names, such as sample1, sample2,etc.
                                       In each sub-directory, quast assessment, including 
-                                      directory file contigs_reports, should exist.
+                                      directory file \"contigs_reports\", should exist.
 
   output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -37,8 +37,8 @@ Necessary input description:
 Options:
      -h                               Print this usage page.
 
-     -p                               The suffix of contigs file in assembly directory.
-                                      default: .contig.gz
+     -s                   <string>    The suffix of contigs file in assembly directory.
+                                      Default: \".contig.gz\"
 
 ";
 
@@ -66,15 +66,12 @@ $quast_dir.="/" unless($quast_dir=~/\/$/);
 $out_dir.="/" unless($out_dir=~/\/$/);
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 my $thread_num=1;
 my $suffix=".contig.gz";
-$suffix=$opt_p if defined $opt_p;
+$suffix=$opt_s if defined $opt_s;
 #Create output directory and sub-directories
 mkdir($out_dir);
 my $out_data=$out_dir."data/";
@@ -205,7 +202,7 @@ Necessary input description:
                                       *.partially.contig and *.partially.coords, should exist.
 
   output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -224,10 +221,7 @@ $out.="/" unless($out=~/\/$/);
 
 ##Check existence of output directory
 if(-e $out){
-    die("Error: output directory \"$out\" already exists.
-    To avoid overwriting of existing files. We kindly request that the
-     output directory should not exist.
-     ");
+    die("Error: output directory \"$out\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 mkdir($out);
 

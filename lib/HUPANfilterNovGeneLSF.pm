@@ -26,7 +26,7 @@ Necessary descriptions:
 
     blast_dir               <string>        The directory of blastn and makeblastdb locates.
     
-    cd-hit_dir              <string>        The directory of cd-hit locates.
+    cd-hit_dir              <string>        The directory of cd-hit-est locates.
     
     RepeatMask_dir          <string>        The directory of RepeatMask locates.
 
@@ -50,7 +50,7 @@ Options:
 
 #check existense of output directory
     if(-e $out_dir){
-        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files. We kindly request that the \noutput directory should not exist.\n");
+        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files, we kindly request that the \noutput directory should not exist.\n");
     }
 
 #adjust directory names and create output directory

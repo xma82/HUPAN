@@ -157,7 +157,7 @@ my $out_file=$out_dir."accession.name";
 open(OUT,">$out_file")||die("Error10: cannot write the table: $out_file.\n");
 print OUT "accesion\taccession.version\ttaxid\tsource\n";
 while((my $key, my $value)=each %accession){
-    print $key."\n";
+    #print $key."\n";
     my $taxonomy=$acc_tax{$key};
     my $records;
     if(exists $source{$taxonomy}){

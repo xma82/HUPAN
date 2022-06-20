@@ -18,12 +18,12 @@ The script will call QUAST program, so the directory where quast.py locates is n
 Necessary input description:
 
   assembly_directory      <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
+                                      named by sample names, such as Sample1, Sample2,etc.
                                       In each sub-directory, assembly results, including 
-                                      files *.scafSeq and *.contig, should exist.
+                                      files \"*.scafSeq\" and \"*.contig\", should exist.
 
   output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -43,7 +43,7 @@ Options:
 
      -g                               Check the statistics of gap-closed assemblies if -g is 
                                       enabled. In the assembly directory of each sample, 
-                                      *_gc.scafSeq and *_gc.contig should exist.
+                                      \"*_gc.scafSeq\" and \"*_gc.contig\" should exist.
                                       Default: check statistics of raw assemblies
 
      -s                               Check the statistics of assembled scaffolds if -s is enabled.
@@ -67,10 +67,7 @@ die("Error02: Cannot find reference sequence file\n") unless(-e $ref);
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Read threads

@@ -1,6 +1,6 @@
 export BINDIR = ../../bin
 install:
-		@cp plotNovelSeq.R ${BINDIR};\
+		@cp pav_plot.R ${BINDIR};\
 		cp plotNovelSeq.R ${BINDIR};\
 		cp plotQual.R ${BINDIR}
 

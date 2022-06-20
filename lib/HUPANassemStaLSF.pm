@@ -18,12 +18,12 @@ The script will call QUAST program, so the directory where quast.py locates is n
 Necessary input description:
 
   assembly_directory      <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
+                                      named by sample names, such as Sample1, Sample2,etc.
                                       In each sub-directory, assembly results, including 
-                                      files *_gc.scafSeq and *_gc.contig, should exist.
+                                      files \"*_gc.scafSeq\" and \"*.contig\", should exist.
 
   output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -43,7 +43,7 @@ Options:
 
      -g                               Check the statistics of gap-closed assemblies if -g is 
                                       enabled. In the assembly directory of each sample, 
-                                      *_gc.scafSeq and *_gc.contig should exist.
+                                      \"*_gc.scafSeq\" and \"*_gc.contig\" should exist.
                                       Default: check statistics of raw assemblies
 
      -s                               Check the statistics of assembled scaffolds if -s is enabled.
@@ -67,10 +67,7 @@ die("Error02: Cannot find reference sequence file\n") unless(-e $ref);
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Read threads
@@ -175,11 +172,11 @@ hupan LSF mergeAssemSta is used to collect statistices info of assembly from qua
 
 Necessary input description:
 
-  QUAST_output_directory_list  <string>    One or more of quast .
+  QUAST_output_directory_list  <string>    One or more of quast output results.
 
-  unaligned_contig_list   <string>    File including a list of names of unaligned contigs. 
-                                      In each directory, there should be sub directories
-                                      named by the sample names.
+  unaligned_contig_list        <string>    File including a list of names of unaligned contigs. 
+                                           In each directory, there should be sub directories
+                                           named by the sample names.
 ";
 
 die $usage if @ARGV<1;

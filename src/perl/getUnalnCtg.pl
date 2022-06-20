@@ -33,7 +33,7 @@ Options:
 
 ";
 
-die $usage if @ARGV!=4;
+die $usage if @ARGV!=5;
 die $usage if defined($opt_h);
 my ($contig_file,$info_file,$coords_file,$output_prefix,$prefix)=@ARGV;
 

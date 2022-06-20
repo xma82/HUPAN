@@ -40,7 +40,7 @@ Options:
 
 #check existense of output directory
     if(-e $out_dir){
-        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files. We kindly request that the \noutput directory should not exist.\n");
+        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files, we kindly request that the \noutput directory should not exist.\n");
     }
 
 #adjust directory names and create output directory

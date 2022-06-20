@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 #Created by Hu Zhiqiang, 2014-7-2
+
 package trim;
 sub trimFastq{
 use strict;
@@ -19,12 +20,12 @@ given to the script as a necessary input.
 Necessary input description:
 
   fastq_data_directory   <string>    This directory should contain many sub-directories
-                                     named by sample names, such as CX101, B152,etc.
+                                     named by sample names, such as Sample1, Sample2,etc.
                                      In each sub-directory, there should be several 
-                                     sequencing files ended by .fastq(or .fq) or .fastq.gz(or .fq.gz).
+                                     sequencing files ended by \".fq.gz\" or \".fastq.gz\".
 
   output_directory       <string>    High-quality reads will be output to this directory. 
-                                     To avoid overwriting of existing files. We kindly request
+                                     To avoid overwriting of existing files, we kindly request
                                      that the output_directory should not exist. It is
                                      to say, this directory will be created by the 
                                      script itself.
@@ -34,22 +35,24 @@ Necessary input description:
 Options:
      -h                              Print this usage page.
 
-     -t                   <int>      thread number
+     -t                   <int>      Thread number.
+                                     Default: 1
 
      -a                   <string>   Adaptor file in fasta utilized by trimmomatic program.
                                      Default: trimmomatoc_dir/adapters/TruSeq3-PE-2.fa
      
      -s                   <string>   Suffix of the fastq_file. Check your sequencing data and
                                      change it if needed.
-                                     Default: \".fq.gz\"
+                                     Default: \".fastq.gz\"
 
      -k                   <string>   Linker for paired_end identifer. Paired-end fastq file
                                      should end with *1suffix or *2suffix, where suffix is
-                                     \".fq.gz\"( or \".fastq\", etc. See -s option) and * is the
+                                     \".fq.gz\"( or \".fastq.gz\", etc. See -s option) and * is the
                                      linker such as \"_\".As an example, the file should 
-                                     be like CX123_1.fq.gz (linker is \"_\", suffix is \".fq.gz\")
-                                     or BX125_R1.fastq(linker is \"_R\", suffix is \".fastq\")
+                                     be like Sample1.fq.gz (linker is \"_\", suffix is \".fq.gz\")
+                                     or Sample2.fastq.gz(linker is \"_R\", suffix is \".fastq.gz\")
                                      Default: \"_\"
+
      -p                   <33 or 64> Quality score version. 
                                      Default: 33 (phred+33)
 
@@ -84,10 +87,7 @@ my ($data_dir,$out_dir,$trim_dir)=@ARGV;
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Detect executable fastqc

@@ -43,15 +43,15 @@ Necessary input description:
   data_path               <string>    This directory should contain many sub-directories
                                       named by sample names, such as sample1, sample2,etc.
                                       In each sub-directory, there should be novel sequences
-                                      file ended by .contig.
+                                      file ended by \".contig\".
 
   out_path                <string>    Results will be output to this directory. To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
 
-  cdhit_directory         <string>    directory where cdhit-est locates.
+  cdhit_directory         <string>    Directory where cd-hit-est locates.
 
 Options:
      -h                               Print this usage.
@@ -73,7 +73,7 @@ Options:
 
 #check existense of output directory
     if(-e $out_dir){
-        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files. We kindly request that the \noutput directory should not exist.\n");
+        die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
     }
 
 #get simulation number 
@@ -172,8 +172,7 @@ Options:
 
 #check existence of output directory
     if(-e $out_dir){
-       die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files. We 
-kindly request that the\n output directory should not exist.\n");
+       die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files, we kindly request that the\n output directory should not exist.\n");
     }
     $out_dir.="/" unless $out_dir=~/\/$/;
     mkdir $out_dir;

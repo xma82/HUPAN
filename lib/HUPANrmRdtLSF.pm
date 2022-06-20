@@ -71,7 +71,7 @@ die(" $exe doesn't exist!
 
 if(-e $out_dir){
     die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
+To avoid overwriting of existing files, we kindly request that the
  output directory should not exist.
 ");
 }
@@ -195,7 +195,7 @@ die("Executable blastCluster.pl cannot be found in your PATH!\n
 
 
 die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
+To avoid overwriting of existing files, we kindly request that the
  output directory should not exist.
 ") if -e $out_dir;
 

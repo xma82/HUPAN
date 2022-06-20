@@ -66,7 +66,7 @@ Options:
 
 #check existence of output directory
     if(-e $out_dir){
-        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files. We kindly request that the\n output directory should not exist.\n");
+        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files, we kindly request that the\n output directory should not exist.\n");
     }
     $out_dir.="/" unless $out_dir=~/\/$/;
     mkdir $out_dir;
@@ -109,9 +109,9 @@ hupan blastAlign blast is used to align the sequences from multiple individual i
 Necessary input description:
 
   data_directory          <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152, etc.
+                                      named by sample names, such as Sample1, Sample2, etc.
                                       In each sub-directory, there should be several
-                                      sequencing files ended by .fa or .fa.gz.
+                                      files ended by \".fa\" or \".fa.gz\".
 
   output_directory        <string>    Output directory.
 
@@ -136,7 +136,7 @@ Options:
                                       Default: 10-5
 
      -s                   <string>    Suffix of files within data_directory.
-                                      Default: .fa
+                                      Default: \".fa\"
 
 ";
 
@@ -146,7 +146,7 @@ Options:
 
 #check existence of output directory
    if(-e $out_dir){
-       die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files. We kindly request that the\n output directory should not exist.\n");
+       die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files, we kindly request that the\n output directory should not exist.\n");
    }
 
 #get the sequence type

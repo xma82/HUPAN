@@ -72,6 +72,7 @@ my @n;
 
 open(IN,$matrix);
 while(<IN>){
+    chomp;
     $i++;
     my @t=split /\t/,$_;
     if($i==1){
@@ -151,7 +152,7 @@ while(<EX>){
 close EX;
 print STDERR "Gene family number:",scalar(@group),"\n";
 print STDERR "Gene number:",scalar(keys(%geneExt)),"\n";
-print STDERR "Rice line number:",scalar(@riceline),"\n";
+print STDERR "Genome number:",scalar(@riceline),"\n";
 ############ end ############
 
 ###### gene fam exist #######

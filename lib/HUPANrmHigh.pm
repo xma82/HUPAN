@@ -16,13 +16,13 @@ The script will call MUMmer program, so you need to tell the program where MUMme
 Necessary input description:
 
   data_directory       <string>      This directory should contain many sub-directories
-                                     named by sample names, such as CX101, B152,etc.
+                                     named by sample names, such as Sample1, Sample2,etc.
                                      In each sub-directory, assembly results, including
-                                     files *.scafSeq and *.contig, should exist.
+                                     files \"*.scafSeq\" and \"*.contig\", should exist.
 
   output_directory     <string>      Both final output files and intermediate results 
                                      will be found in this directory. To avoid 
-                                     overwriting of existing files. We kindly request
+                                     overwriting of existing files, we kindly request
                                      that the output_directory should not exist. It is
                                      to say, this directory will be created by the 
                                      script itself.
@@ -32,10 +32,10 @@ Necessary input description:
   <reference.fa>       <string>      Reference sequence file (.fa or .fa.gz).
 
 Options:
-     -h                          Print this usage page.
+     -h                              Print this usage page.
 
-     -s            <string>      Suffix of assembled file. 
-                                 Defult: contigs.fa
+     -s                <string>      Suffix of assembled file. 
+                                     Defult: \"contigs.fa\"
 ";
 
     die $usage if @ARGV!=4;
@@ -44,10 +44,7 @@ Options:
 
 #Check existence of output directory
 if(-e $out_dir){
-die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
     #Detect executable nucmer and show-coords
@@ -144,42 +141,41 @@ extractSeq is used to extract contigs that is lower similarity with reference ge
 Necessary input description:
 
 data_dir             <string>      This directory should contain many sub-directories
-                                   named by sample names, such as CX101, B152,etc.
+                                   named by sample names, such as Sample1, Sample2,etc.
                                    In each sub-directory, assembly results, including
-                                   files *.scafSeq and *.contig, should exist.
+                                   files \"*.scafSeq\" and \"*.contig\", should exist.
 
 out_dir              <string>      Results will be output to this directory.
-                                   To avoid overwriting of existing files. We kindly request
+                                   To avoid overwriting of existing files, we kindly request
                                    that the output_directory should not exist. It is
                                    to say, this directory will be created by the 
                                    script itself.
 
 MUMmer_output_dir    <string>      This directory should contain many sub-directories
-                                   named by sample names, such as CX101, B152,etc.
+                                   named by sample names, such as Sample1, Sample2,etc.
                                    In each sub-directory, alignment results, including
-                                   files *.coords, should exist.
+                                   files \"*.coords\", should exist.
 
 Options:
-     -h                          Print this usage page.
+     -h                            Print this usage page.
 
-     -i            <float>       The theshold of identity <Default: 0.95>.
+     -i              <float>       The theshold of identity.
+                                   Default: 0.95.
 
-     -c            <float>       The theshold of query coverage <Default: 0.95>.
+     -c              <float>       The theshold of query coverage.
+                                   Default: 0.95.
 
-     -s            <string>      Suffix of assembled file. 
-                                 Defult: contigs.fa
+     -s              <string>      Suffix of assembled file. 
+                                   Defult: \"contigs.fa\"
 ";
     die $usage if @ARGV!=3;
     die $usage if defined($opt_h);
     my ($contig_dir,$out_dir,$coords_dir)=@ARGV;
 
-#Check existence of output directory
-if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
-}
+    #Check existence of output directory
+    if(-e $out_dir){
+        die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
+    }
 
     #get identity
     my $identity=0.95;
@@ -251,7 +247,7 @@ foreach my $s (@sample){
     while(<FILE1>){
     chomp;
     if($_=~/^>/){
-        my @t=split / /,$_;
+        my @t=split /\s+/,$_;
         my $name=substr($t[0],1,length($t[0])-1);
         $names{$name}=1;
         }
@@ -273,7 +269,8 @@ foreach my $s (@sample){
         }
         else{
             chomp;
-            my @t=split ' ',$_;
+            $_=~s/^ +//;
+            my @t=split /\s+/,$_;
             #print @t;
             my $i=$t[9];
             my $c=$t[15];
@@ -287,7 +284,7 @@ foreach my $s (@sample){
     }
     close FILE2;
     my $length2=keys %contigs;
-    print "There are: ".$length2." contigs highly similarity with the reference genome with >= ".($identity*100)."% identity and >= ".($coverage*100)."% coverage .\n";
+    print "There are: ".$length2." contigs highly similarity with the reference genome with >= ".($identity*100)."% identity and >= ".($coverage*100)."% coverage.\n";
 
     #Remove the contigs name of high similarity with reference genome
     foreach my $key (keys %names){
@@ -306,7 +303,7 @@ foreach my $s (@sample){
     while(my $line=<FILE3>){
         chomp $line;
         if($line=~/^>/){
-            my @t=split / /,$line;
+            my @t=split /\s+/,$line;
             my $name=substr($t[0],1,length($t[0])-1);
             if(exists $names{$name}){
                 print FILE4 $line."\n";

@@ -5,11 +5,11 @@ sub checkQual{
     use strict;
     use warnings;
     use Getopt::Std;
-    use vars qw($opt_h $opt_f $opt_t $opt_v);
-    getopts("hf:t:v:");
+    use vars qw($opt_h $opt_f $opt_t);
+    getopts("hf:t:");
     my $usage="\nUsage: hupan qualSta [options] <data_directory> <output_directory>
 
-qualSta is used to check qualities of .fastq/.fastq.gz files on a large scale.
+qualSta is used to check qualities of \".fq.gz\"/\".fastq.gz\" files on a large scale.
 
 The script will call fastqc program, so please make sure fastqc is in your
 PATH, or you need to use -f option to tell the program where fastqc locates.
@@ -17,13 +17,13 @@ PATH, or you need to use -f option to tell the program where fastqc locates.
 Necessary input description:
 
   data_directory   <string>      This directory should contain many sub-directories
-                                 named by sample names, such as CX101, B152,etc.
+                                 named by sample names, such as Sample1, Sample2,etc.
                                  In each sub-directory, there should be several 
-                                 sequencing files ended by .fastq or .fastq.gz.
+                                 sequencing files ended by \".fq.gz\" or \".fastq.gz\".
 
   output_directory <string>      Both final output files and intermediate results 
                                  will be found in this directory. To avoid 
-                                 overwriting of existing files. We kindly request
+                                 overwriting of existing files, we kindly request
                                  that the output_directory should not exist. It is
                                  to say, this directory will be created by the 
                                  script itself.
@@ -40,10 +40,7 @@ Options:
                                  program. It is recommended to set as the number of 
                                  files within each sample. Pay attention that the
                                  machine should have this number of threads.
-                                 default: 1 
-    
-     -v            <string>      Sets to: PE, if all files are PE data.
-				
+                                 Default: 1 			
 ";
 
     die $usage if @ARGV!=2;
@@ -52,10 +49,7 @@ Options:
 
 #Check existence of output directory
     if(-e $out_dir){
-	die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+	die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
     }
 
 #Detect executable fastqc
@@ -130,7 +124,7 @@ To avoid overwriting of existing files. We kindly request that the
 		    push @fastq, $f;
 		}
 		else{
-		    print STDERR "Warning: $f is not a .fastq or .fastq.gz file! =>  Not processed!\n";
+		    print STDERR "Warning: $f is not a .fq.gz or .fastq.gz file! =>  Not processed!\n";
 		}
 	    }
 	    #generate commandline
@@ -185,11 +179,6 @@ sub mergeFastqc{
 	    next if $f=~/^\./;
 	    next if $f=~/\.zip$/;
 	    next if $f=~/\.html$/;
-	    if(defined($opt_v)){
-		if($opt_v eq "PE"){
-		next if $f=~/^single/;
-		}
-	    }
 	    my $fd=$sd."/".$f."/"."summary.txt";
 	    open(FILE,$fd) ||die("Unable to open fastqc output file: $fd\n");
 	    my @tmp=<FILE>;

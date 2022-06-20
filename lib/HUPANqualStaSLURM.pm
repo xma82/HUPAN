@@ -10,7 +10,7 @@ sub checkQual{
 
     my $usage="\nUsage: hupanSLURM qualSta [options] <data_directory> <output_directory>
 
-qualSta is used to check qualities of .fastq/.fastq.gz files on a large scale.
+qualSta is used to check qualities of \".fq.gz\"/\".fastq.gz\" files on a large scale.
 
 The script will call fastqc program, so please make sure fastqc is in your
 PATH, or you need to use -f option to tell the script where it locates.
@@ -18,13 +18,13 @@ PATH, or you need to use -f option to tell the script where it locates.
 Necessary input description:
 
   data_directory   <string>      This directory should contain many sub-directories
-                                 named by sample names, such as CX101, B152,etc.
+                                 named by sample names, such as Sample1, Sample2,etc.
                                  In each sub-directory, there should be several 
-                                 sequencing files ended by .fastq or .fastq.gz.
+                                 sequencing files ended by \".fq.gz\" or \".fastq.gz\".
 
   output_directory <string>      Both final output files and intermediate results 
                                  will be found in this directory. To avoid 
-                                 overwriting of existing files. We kindly request
+                                 overwriting of existing files, we kindly request
                                  that the output_directory should not exist. It is
                                  to say, this directory will be created by the 
                                  script itself.
@@ -41,10 +41,10 @@ Options:
                                  program. It is recommended to set as the number of 
                                  files within each sample. Pay attention that the
                                  machine should have this number of threads.
-                                 default: 1 
+                                 Default: 1 
 
      -q            <string>      The queue name for job submiting. 
-                                 default: default queue
+                                 Default: default queue
 ";
 
     die $usage if @ARGV!=2;
@@ -53,9 +53,7 @@ Options:
     
 #Check existence of output directory
     if(-e $out_dir){
-	die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.");
+	die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.");
 }
     
 #Detect executable fastqc
@@ -139,7 +137,7 @@ mkdir($stdout_out);
 		    push @fastq, $f;
 		}
 		else{
-		    print STDERR "Warning: $f is not a .fastq or .fastq.gz file! =>  Not processed!\n";
+		    print STDERR "Warning: $f is not a .fq.gz or .fastq.gz file! =>  Not processed!\n";
 		}
 	    }
         #generate commandline

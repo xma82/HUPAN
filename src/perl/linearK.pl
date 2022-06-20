@@ -15,7 +15,7 @@ ATTENTION: Executable 1)SOAPdenovo-63mer, 2)SOAPdenovo-127mer and 3)GapCloser sh
 Necessary input description:
 
   data_directory          <string>    This directory should contain one or more pair of FASTQ files
-                                      with suffix of .fq or .fq.gz. The suffix can be changed with -s option.
+                                      with suffix of .fastq.gz or .fq.gz. The suffix can be changed with -s option.
 
   output_directory        <string>    The output directory.
 
@@ -29,10 +29,10 @@ Options:
                                       Default: 1
 
      -g                   <int>       Genome size. Used to infer sequencing depth. 
-                                      Default: 380000000 (460M)
+                                      Default: 3000000000 (3Gb)
      
      -s                   <string>    Suffix of files within data_directory.
-                                      Default: .fq.gz 
+                                      Default: .fastq.gz 
 
      -r                   <string>    Parameters of linear function: Kmer=2*int(0.5*(a*Depth+b))+1. 
                                       The parameter should be input as \"a,b\".
@@ -98,11 +98,11 @@ my $thread_num=1;
 $thread_num=$opt_t if defined($opt_t);
 
 #define file suffix
-my $suffix=".fq.gz";
+my $suffix=".fastq.gz";
 $suffix=$opt_s if defined($opt_s);
 
 #define genome size
-my $gsize=380000000;
+my $gsize=3000000000;
 $gsize=$opt_g if defined($opt_g);
 
 #define linear function of Kmer

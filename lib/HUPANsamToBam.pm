@@ -17,22 +17,22 @@ The script will call samtools program, so the directory where samtools locates i
 
 Necessary input description:
   mapping_directory      <string>     This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
+                                      named by sample names, such as Sample1, Sample2,etc.
                                       In each sub-directory, One or more mapping results,
-                                      *.sam, should exist.
+                                      \"*.sam\", should exist.
 
-  output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+  output_directory       <string>     Results will be output to this directory.To avoid 
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
 
-  QUAST_directory         <string>    samtools directory where executable samtools locates.
+  QUAST_directory        <string>     samtools directory where executable samtools locates.
 
 Options:
      -h                               Print this usage page.
 
-     -t                   <int>       Threads used.
+     -t                  <int>        Threads used.
                                       Default: 1
 
 ";
@@ -48,10 +48,7 @@ die("Error01: Cannot find samtools file in directory $samtools_dir\n") unless(-e
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Read threads

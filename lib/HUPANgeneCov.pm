@@ -16,17 +16,17 @@ The script will call samtools and ccov.
 Necessary input description:
 
   bam_directory           <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
-                                      In each sub-directory, mapping result, a sorted .bam
+                                      named by sample names, such as Sample1, Sample2,etc.
+                                      In each sub-directory, mapping result, a sorted \".bam\"
                                       file, should exist.
 
   output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
 
-  gene_annotation         <string>    gene annotations in a single gtf file
+  gene_annotation         <string>    Gene annotations in a single gtf file
 
 Options:
      -h                               Print this usage page.
@@ -56,10 +56,7 @@ die("ccov cannot be found in your PATH!\n
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Read threads

@@ -2,6 +2,9 @@
 #Created by Hu Zhiqiang, 2014-9-5
 #Modefied by Duan Zhongqu, 2018-7-2
 #Added the function of de novo assembly by sga with lower memory.
+#Modefied by Duan Zhongqu, 2020-4-25
+#Fix some bugs, for example, the suffix of sequencing data files.
+
 package assembly;
 
 sub assemble{
@@ -18,7 +21,7 @@ Commands:
     if($com eq "soapdenovo"){
 	soap(@ARGV);
     }
-    elsif($com eq "linearK.pl"){
+    elsif($com eq "linearK"){
 	linearK(@ARGV);
     }
     elsif($com eq "sga"){
@@ -44,29 +47,29 @@ hupanSLURM assemble soapdenovo is used to assemble high-quality reads on large s
 Necessary input description:
 
   fastq_data_directory    <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
+                                      named by sample names, such as Sample1, Sample2,etc.
                                       In each sub-directory, there should be several 
-                                      sequencing files ended by .fastq or .fastq.gz.
+                                      sequencing files ended by \".fq.gz\" or \".fastq.gz\".
 
   output_directory        <string>    Alignment results will be output to this directory.
-                                      To avoid overwriting of existing files. We kindly request
+                                      To avoid overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
 
-  sopadenovo_directory    <string>    directory where soapdenovo2 executable files exists   
+  sopadenovo_directory    <string>    Directory where soapdenovo2 executable files exists   
 
 Options:
-     -h                              Print this usage page.
+     -h                               Print this usage page.
 
-     -t                   <int>      Threads used.
-                                     Default: 1
+     -t                   <int>       Threads used.
+                                      Default: 1
 
      -s                   <string>    Suffix of files within data_directory.
-                                      Default: .fq.gz 
+                                      Default: \".fastq.gz\" 
 
-     -k                   <int>      Kmer.
-                                     Default: 35
+     -k                   <int>       Kmer.
+                                      Default: 35
 
      -c                   <string>    Parameters of soapdenovo2 config file. 8 parameters ligated by comma
                                         1)maximal read length
@@ -81,7 +84,7 @@ Options:
                                           (at least 32 for short insert size)
                                       Default: 80,460,0,3,80,1,3,32
 
-     -g                               enable gapcloser 
+     -g                               Enable gapcloser 
 
      -q                  <string>     The queue name for job submiting. 
                                       Default: default queue
@@ -93,10 +96,7 @@ my ($data_dir,$out_dir,$tool_dir)=@ARGV;
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 $tool_dir.="/" unless $tool_dir=~/\/$/;
@@ -118,7 +118,7 @@ my $kmer=35;
 $kmer=$opt_k if defined $opt_k;
 
 #define file suffix
-my $suffix=".fq.gz";
+my $suffix=".fastq.gz";
 $suffix=$opt_s if defined($opt_s);
 
 my ($max_rd_len,$avg_ins,$reverse_seq,$asm_flags,$rd_len_cutoff,$rank,$pair_num_cutoff,$map_len)
@@ -241,29 +241,29 @@ hupanSLURM assmble linearK is used to assemble high-quality reads on large scale
 Necessary input description:
 
   fastq_data_directory    <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
+                                      named by sample names, such as Sample1, Sample2,etc.
                                       In each sub-directory, there should be several 
                                       sequencing files ended by .fastq or .fastq.gz.
 
   output_directory        <string>    Alignment results will be output to this directory.
-                                      To avoid overwriting of existing files. We kindly request
+                                      To avoid overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
 
-  sopadenovo_directory    <string>    directory where soapdenovo2 executable files exists   
+  sopadenovo_directory    <string>    Directory where soapdenovo2 executable files exists   
 
 Options:
-     -h                              Print this usage page.
+     -h                               Print this usage page.
 
-     -t                   <int>      Threads used.
-                                     Default: 1
+     -t                   <int>       Threads used.
+                                      Default: 1
 
      -g                   <int>       Genome size. Used to infer sequencing depth. 
-                                      Default: 380000000 (460M)
+                                      Default: 3000000000 (3G)
      
      -s                   <string>    Suffix of files within data_directory.
-                                      Default: .fq.gz 
+                                      Default: \".fastq.gz\" 
 
      -r                   <string>    Parameters of linear function: Kmer=2*int(0.5*(a*Depth+b))+1. 
                                       The parameter should be input as \"a,b\".
@@ -299,6 +299,7 @@ Options:
      -m                   <int>       The number of consecutive Ns to be broken down to contigs.This is used 
                                       in the process break gapclosed scaffolds to contigs.
                                       Default: 10.
+
      -q                   <string>    The queue name for job submiting. 
                                       Default: default queue
 ";
@@ -309,10 +310,7 @@ my ($data_dir,$out_dir,$soapdenovo)=@ARGV;
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist
-.");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 #Check executable linearK.pl
 my $exec="linearK.pl";
@@ -405,8 +403,8 @@ use strict;
 use warnings;
 use Cwd 'abs_path';
 use Getopt::Std;
-use vars qw($opt_h $opt_t $opt_d $opt_q $opt_m);
-getopts("ht:d:q:m:");
+use vars qw($opt_h $opt_t $opt_d $opt_q $opt_m $opt_s);
+getopts("ht:d:q:m:s:");
 
 my $usage="\nUsage: hupan assemble sga [options] <fastq_data_directory> <output_directory> <sga_directory>
 
@@ -415,12 +413,12 @@ hupan assemble sga is used to assemble high-quality reads on large scale.
 Necessary input description:
 
   fastq_data_directory    <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
+                                      named by sample names, such as Sample1, Sample2,etc.
                                       In each sub-directory, there should be several 
-                                      sequencing files ended by fastq.gz.
+                                      sequencing files ended by \".fastq.gz\" or \".fq.gz\".
 
   output_directory        <string>    Alignment results will be output to this directory.
-                                      To avoid overwriting of existing files. We kindly request
+                                      To avoid overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -433,8 +431,11 @@ Options:
      -t                   <int>       Threads used.
                                       Default: 1.
 
+     -s                   <string>    Suffix of files within data_directory.
+                                      Default: \".fastq.gz\"  
+
      -d                   <int>       The parameter sets used for different depths of sequencing
-                                      data. We obtained two optimatial paramter sets from 
+                                      data, we obtained two optimatial paramter sets from 
                                       simulated data for 30-fold and 60-fold, respectively.
                                       Default: 30.
 
@@ -452,16 +453,13 @@ my ($data_dir,$out_dir,$sga_dir)=@ARGV;
 
 $data_dir=abs_path($data_dir);
 $out_dir=abs_path($out_dir);
-print $data_dir."\n";
-print $out_dir."\n";
+#print $data_dir."\n";
+#print $out_dir."\n";
 my $cmd_dir=$ENV{'PWD'};
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist
-.");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Check executable sga
@@ -478,6 +476,10 @@ if(defined($opt_t)){
 #define depth
 my $depth=30;
 $depth=$opt_d if defined $opt_d;
+
+#define file suffix
+my $suffix=".fastq.gz";
+$suffix=$opt_s if defined($opt_s);
 
 #whether keep the intermediate results
 my $keep=0;
@@ -510,9 +512,9 @@ foreach my $s (@sample){
     foreach my $f (@files){
         next if $f=~/^\.+$/;
         next if $f=~/^single/;
-        print STDERR "Warnig: $f without suffix: fastq.gz\n" unless $f=~/fastq.gz$/;
-        next unless $f=~/fastq.gz$/;
-        my $fb=substr($f,0,length($f)-length(".fastq.gz")-1);
+        print STDERR "Warnig: $f without suffix: $suffix\n" unless $f=~/$suffix$/;
+        next unless $f=~/$suffix$/;
+        my $fb=substr($f,0,length($f)-length($suffix)-1);
         #print $fb."\n";
         push @fq_base, $fb;
     }
@@ -528,8 +530,10 @@ foreach my $s (@sample){
     if($length==1){
         my $b=$fq_base[0];
         $preprocess_fastq=$o_dir.$s.".fastq";
-        $fastq1=$s_dir.$b."1.fastq.gz";
-        $fastq2=$s_dir.$b."2.fastq.gz";
+        $fastq1=$s_dir.$b."1".$suffix;
+        $fastq2=$s_dir.$b."2".$suffix;
+        die("Error: missed file: $fastq1\n") unless -e $fastq1;
+        die("Error: missed file: $fastq2\n") unless -e $fastq2;
         $com="$sga preprocess -o $preprocess_fastq --pe-mode 1 $fastq1 $fastq2\n";
         $com.="$sga index -a ropebwt --no-reverse -t $thread_num $preprocess_fastq\n";
     }
@@ -537,10 +541,10 @@ foreach my $s (@sample){
         my @list;
         my $merge_prefix=$o_dir.$s;
         foreach my $b (@fq_base){
-            $fastq1=$s_dir.$b."1.fastq.gz";
-            $fastq2=$s_dir.$b."2.fastq.gz";
-            print STDERR "Warning: missed file: $fastq1\n" unless -e $fastq1;
-            print STDERR "Warning: missed file: $fastq2\n" unless -e $fastq2;
+            $fastq1=$s_dir.$b."1".$suffix;
+            $fastq2=$s_dir.$b."2".$suffix;
+            die("Error: missed file: $fastq1\n") unless -e $fastq1;
+            die("Error: missed file: $fastq2\n") unless -e $fastq2;
             $preprocess_fastq=$s_dir.$s.".fastq";
             $com="$sga preprocess -o $preprocess_fastq --pe-mode 1 $fastq1 $fastq2\n";
             $com.="$sga index -a ropebwt --no-reverse -t $thread_num $preprocess_fastq\n";

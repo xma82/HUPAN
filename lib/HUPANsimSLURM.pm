@@ -15,11 +15,11 @@ sim is used to simulate the size of pan-genome and core-genome from gene presenc
 
 Necessary input description:
 
-  data_path   <string>           This path leads to gene.exist or geneFam.exist
+  data_path        <string>      This path leads to gene.exist or geneFam.exist
 
   output_directory <string>      Both final output files and intermediate results 
                                  will be found in this directory. To avoid 
-                                 overwriting of existing files. We kindly request
+                                 overwriting of existing files, we kindly request
                                  that the output_directory should not exist. It is
                                  to say, this directory will be created by the 
                                  script itself.
@@ -29,7 +29,7 @@ Options:
     
      -n            <int>         Specifies the number of random sampling times for
                                  simulation.
-                                 default: 100
+                                 Default: 100
     
 ";
 
@@ -39,10 +39,7 @@ Options:
 
 #Check existence of output directory
     if(-e $out_dir){
-	die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+	     die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
     }
     
 #get simulation number

@@ -14,7 +14,7 @@ install:
 
 clean:
 		@rm ${BINDIR}/hupan;\
-		rm ${BINDIR}/hupanSLF;\
+		rm ${BINDIR}/hupanLSF;\
 		rm ${BINDIR}/hupanSLURM;\
 		rm ${BINDIR}/adjCdhit.pl;\
 		rm ${BINDIR}/blastCluster.pl;\

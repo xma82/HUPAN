@@ -41,12 +41,12 @@ The script will call bam_stats (in BamUtil), so the directory where bamUtil loca
 Necessary input description:
 
   bam_directory           <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
-                                      In each sub-directory, mapping result, a sorted .bam
+                                      named by sample names, such as Sample1, Sample1,etc.
+                                      In each sub-directory, mapping result, a sorted \".bam\"
                                       file, should exist.
 
   output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -68,10 +68,7 @@ die("Error01: Cannot find bam_stats file in directory bin/ under $bamutil_dir\n"
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Read threads
@@ -135,12 +132,12 @@ The script will call qualimap, so the directory where qualimap locates is needed
 Necessary input description:
 
   bam_directory           <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
-                                      In each sub-directory, mapping result, a sorted .bam
+                                      named by sample names, such as Sample1, Sample2,etc.
+                                      In each sub-directory, mapping result, a sorted \".bam\"
                                       file, should exist.
 
   output_directory        <string>    Results will be output to this directory.To avoid 
-                                      overwriting of existing files. We kindly request
+                                      overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -174,10 +171,7 @@ die("Error01: Cannot find qualimap file in directory bin/ under $qualimap_dir\n"
 
 #Check existence of output directory
 if(-e $out_dir){
-    die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
- output directory should not exist.
-");
+    die("Error: output directory \"$out_dir\" already exists. To avoid overwriting of existing files, we kindly request that the output directory should not exist.\n");
 }
 
 #Read threads

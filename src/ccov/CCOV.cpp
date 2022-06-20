@@ -231,10 +231,10 @@ void checkGeneCoverage(map<string,vector<unsigned int> > &mapper, GTF &gtf){
       //	cerr << i <<"\t**"<<mapper[giter->chr].size()<<endl;
       //	exit(-1);
       //      }  
-    alength+=mapper[giter->chr][i-1];
+      //  alength+=mapper[giter->chr][i-1];
       if(mapper[giter->chr][i-1]>0){
-	slength++;
-	alength+=mapper[giter->chr][i-1];
+	        slength++;
+	        alength+=mapper[giter->chr][i-1];
       }
     }
     giter->geneDep=(double)alength/(double)tlength;

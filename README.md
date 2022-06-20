@@ -1,10 +1,14 @@
-﻿#HUPAN
+﻿# HUPAN: HUman Pan-genome ANalysis
 
 ---
 
  **1. Introduction**
  
-The human reference genome is still incomplete, especially for those population-specific or individual-specific regions, which may have important functions. It encourages us to build the pan-genome of human population. Previously, our team developed a "map-to-pan" strategy, [EUPAN][1], specific for eukaryotic pan-genome analysis. However, due to the large genome size of individual human genome, [EUPAN][2] is not suit for pan-genome analysis involving in hundreds of individual genomes. Here, we present an improved tool, HUPAN (Human Pan-genome Analysis), for human pan-genome analysis.
+The human reference genome is still incomplete, especially for those population-specific or individual-specific regions, which may have important functions. It encourages us to build the pan-genome of human population. Previously, our team developed a "map-to-pan" strategy, [EUPAN][1], specific for eukaryotic pan-genome analysis. However, due to the large genome size of individual human genome, [EUPAN][2] is not suit for pan-genome analysis involving in hundreds of individual genomes. Here, we present an improved tool, HUPAN (HUman Pan-genome ANalysis), for human pan-genome analysis.
+
+The HUPAN homepage is http://cgm.sjtu.edu.cn/hupan/
+
+The HUPAN paper is available at https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1751-y
 
 **2. Installation**
 
@@ -15,9 +19,11 @@ The human reference genome is still incomplete, especially for those population-
     R is utilized for visualization and statistical tests in HUPAN
     toolbox. Please install R first and make sure R and Rscript are
     under your PATH.
- - R packages Several R packages are needed including ggplot2, reshape2
-    and ape packages. Follow the Installation step,
- - or you can install the packages by yourself.
+
+ - R packages 
+
+    Several R packages are needed including ggplot2, reshape2
+    and ape packages. Follow the Installation step, or you can install the packages by yourself.
 
 **Installation procedures** 
 
@@ -26,9 +32,7 @@ The human reference genome is still incomplete, especially for those population-
     `git clone git@github.com:SJTU-CGM/HUPAN.git`
  
  - Alternatively, you also could obtain the toolbox in the [HUPAN][4]
-   website;
-
- - Please uncompress the HUPAN toolbox package:
+   website and uncompress the HUPAN toolbox package:
  
     `tar zxvf HUPAN-v**.tar.gz`
 
@@ -133,7 +137,8 @@ ii. If the reads are not so good, the users could trim or filter low-quality rea
     hupanSLURM trim -w 100 -m 100 data/ filter/ /path/to/Trimmomatic
 
 Results could be found in the trim or filter directory.
-iii.After trimming or filtration of reads, the sequencing quality should be evaluated again by `qualitySta`, and if the trimming results are still not good for subsequent analyses, new parameters should be given and the above steps should be conducted for several times.
+
+iii. After trimming or filtration of reads, the sequencing quality should be evaluated again by `qualitySta`, and if the trimming results are still not good for subsequent analyses, new parameters should be given and the above steps should be conducted for several times.
 
 **(3) *De novo* assembly of individual genomes**
 
@@ -147,7 +152,7 @@ Please note that this startegy requires huge memory for assembly an individual h
 
 ii.Assembly by the iterative use of SOAPDenovo2. Not Recommend.
 
-    hupanSLURM linearK data assembly_linearK/ /path/to/SOAPDenovo2
+    hupanSLURM assemble linearK data assembly_linearK/ /path/to/SOAPDenovo2
 
 iii. Assembly by [SGA][11]. 
 
@@ -176,10 +181,15 @@ iv. Two types of non-reference sequences, fully unaligned sequences and partiall
 v. Non-reference sequences from multiple individuals are merged:
 
     hupanSLURM mergeUnalnCtg Unalign_result/data/ mergeUnalnCtg_result
+   
+   Alternatively, if you conducted step iv by `hupan`, you can find the merged result in the Unalign_result/total:
+   
+    mv Unalign_result/total/ mergeUnalnCtg_result
+   
+   
+**(5) Remove redundancy and potential contamination sequences**
 
-**(5) Remove redundancy and potential commination sequences**
-
-After obtaining the non-reference sequences from multiple individuals, redundant sequences between different individuals should be excluded, and the potential commination sequences from non-human species are also removed for further analysis.
+After obtaining the non-reference sequences from multiple individuals, redundant sequences between different individuals should be excluded, and the potential contamination sequences from non-human species are also removed for further analysis.
 
 i. The step of remove redundancy sequences is conducted by [CDHIT][14] for fully unaligned sequences and partially unaligned sequences, respectively:
 
@@ -188,17 +198,24 @@ i. The step of remove redundancy sequences is conducted by [CDHIT][14] for fully
 
 ii. Then the non-redundant sequences are aligned to NCBI’s non-redundant nucleotide database by [BLAST][15]: 
 
-    hupanSLURM blastAlign blast rmRedundant rmRedundant_blast /path/to/nt /path/to/blast
+    mkdir nt & cd nt
+    wget https://ftp.ncbi.nih.gov/blast/db/FASTA/nt.gz |gunzip & cd ..
+    hupanSLURM blastAlign mkblastdb nt nt_index path/to/blast
+    mkdir rmRedundant & mv rmRedundant.fully.unaligned rmRedundant & mv rmRedundant.partially.unaligned rmRedundant
+    hupanSLURM blastAlign blast rmRedundant rmRedundant_blast /path/to/nt_index /path/to/blast
 
 iii. According to the alignment result, the taxonomic classification of each sequences (if have) could be obtained:
 
-    hupanSLURM getTaxClass rmRedundant_blast/ data/fully/fully.non-redundant.blast info/ TaxClass_fully
-    hupanSLURM getTaxClass rmRedundant_blast/ data/partially/partially.non-redundant.blast info/ TaxClass_partially
+    wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid
+    wget https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz & tar -zvxf new_taxdump.tar.gz
+    mkdir info & mv nucl_gb.accession2taxid info & mv new_taxdump/rankedlineage.dmp info
+    hupanSLURM getTaxClass rmRedundant_blast/data/rmRedundant.fully.unaligned/non-redundant.blast info/ TaxClass_fully
+    hupanSLURM getTaxClass rmRedundant_blast/data/rmRedundant.partially.unaligned/non-redundant.blast info/ TaxClass_partially
 
 iv. And the sequences classifying as microbiology and non-primate eukaryotes are considered as non-human sequences and removed from further consideration:  
 
-    hupanSLURM rmCtm -i 60 rmRedundant/fully/fully.non-redundant.fa rmRedundant_blast/data/fully/fully.non-redundant.blast TaxClass_fully/data/accession.name rmCtm_fully
-    hupanSLURM rmCtm -i 60 rmRedundant/partially/partially.non-redundant.fa rmRedundant_blast/data/partially/partially.non-redundant.blast TaxClass_partially/data/accession.name rmCtm_partially
+    hupanSLURM rmCtm -i 60 rmRedundant/rmRedundant.fully.unaligned/non-redundant.fa rmRedundant_blast/data/rmRedundant.fully.unaligned/non-redundant.blast TaxClass_fully/data/accession.name rmCtm_fully
+    hupanSLURM rmCtm -i 60 rmRedundant/rmRedundant.partially.unaligned/non-redundant.fa rmRedundant_blast/data/rmRedundant.partially.unaligned/non-redundant.blast TaxClass_partially/data/accession.name rmCtm_partially
 
 **(6) Construction and annotation of pan-genome**
 
@@ -219,13 +236,12 @@ iii. Then after all procedures are finished, the outcomes are merged:
 
 iv. The new predicted genes may be highly similar to the genes that are located in reference genome, and additional filtering step should be conducted to ensure the novelty of predicted gene:
 
-    hupanSLURM filterNovGen GenePre_merge GenePre_filter /path/to/reference/ /path/to/blast /path/to/cdhit /path/to/RepeatMask
+    hupanSLURM filterNovGene GenePre_merge GenePre_filter /path/to/reference/ /path/to/blast /path/to/cdhit /path/to/RepeatMask
 
 v. The annotation of pan-genome sequences is simply merged to obtain by combine two annotation files:
  
-
-     hupanSLURM pTpG ref/ref.gtf ref/ref-ptpg.gtf
-     cat ref/ref-ptpg.gtf non-reference.gtf >pan/pan.gtf
+     hupanSLURM pTpG ref/ref.gff ref/ref-ptpg.gff
+     cat ref/ref-ptpg.gff non-reference.gtf >pan/pan.gff
 
 **(7) PAV analysis**
 
@@ -243,7 +259,7 @@ ii. The result of .sam should be converted to .bam and sorted and indexed use [S
 
 iii. Then the gene body coverage and the cds coverage of each gene are calculated:
 
-      hupanSLURM geneCov panBam/data geneCov/ pan/pan.gtf
+      hupanSLURM geneCov panBam/data geneCov/ pan/pan.gff
 
 iv. Finally, the gene presence-absence is determined by the threshold of cds coverage as 95%:
 
@@ -263,7 +279,7 @@ Any bugs or suggestions, please contact the [authors][20].
   [3]: https://github.com/SJTU-CGM/HUPAN
   [4]: http://cgm.sjtu.edu.cn/hupan/download.php
   [5]: http://cgm.sjtu.edu.cn/eupan/
-  [6]: ftp://ftp-trace.ncbi.nih.gov/giab/ftp/data/NA12878/NIST_NA12878_HG001_HiSeq_300x/NHGRI_Illumina300X_novoalign_bams/HG001.GRCh38_full_plus_hs38d1_analysis_set_minus_alts.300x.bam
+  [6]: http://ftp-trace.ncbi.nih.gov/giab/ftp/data/NA12878/NIST_NA12878_HG001_HiSeq_300x/NHGRI_Illumina300X_novoalign_bams/HG001.GRCh38_full_plus_hs38d1_analysis_set_minus_alts.300x.bam
   [7]: http://cgm.sjtu.edu.cn/hupan/data/hupanExample.tar.gz
   [8]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
   [9]: http://www.usadellab.org/cms/index.php?page=trimmomatic

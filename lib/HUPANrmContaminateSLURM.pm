@@ -22,18 +22,18 @@ Necessary input description:
 
   output_directory     <string>      Both final output files and intermediate results 
                                      will be found in this directory. To avoid 
-                                     overwriting of existing files. We kindly request
+                                     overwriting of existing files, we kindly request
                                      that the output_directory should not exist. It is
                                      to say, this directory will be created by the 
                                      script itself.
 
 Options:
 
-     -h                            Print this usage page.
+     -h                              Print this usage page.
      
-     -l                            The local alignment length. (default: 100 bp)
+     -l                <int>         The local alignment length. (default: 100 bp)
 
-     -i                            The local alignment identity. (default: 90%)
+     -i                <int>         The local alignment identity. (default: 90%)
 
 ";
 
@@ -43,7 +43,7 @@ Options:
 
 #check existence of output directory
    if(-e $out_dir){
-        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files. We kindly request that the \noutput directory should not exist.\n");
+        die("Error: output directory \"$out_dir\" already exists.\nTo avoid overwriting of existing files, we kindly request that the \noutput directory should not exist.\n");
     }
 
 #adjust directory names and create output directory

@@ -17,12 +17,12 @@ The script will call mapping program (bwa mem or bowtie2), so the directory wher
 Necessary input description:
 
   fastq_data_directory    <string>    This directory should contain many sub-directories
-                                      named by sample names, such as CX101, B152,etc.
+                                      named by sample names, such as Sample1, Sample2,etc.
                                       In each sub-directory, there should be several 
                                       sequencing files ended by .fq(.gz) or .fastq(.gz).
 
   output_directory        <string>    Alignment results will be output to this directory.
-                                      To avoid overwriting of existing files. We kindly request
+                                      To avoid overwriting of existing files, we kindly request
                                       that the output_directory should not exist. It is
                                       to say, this directory will be created by the 
                                       script itself.
@@ -71,7 +71,7 @@ my ($data_dir,$out_dir,$map_dir,$map_index)=@ARGV;
 #Check existence of output directory
 if(-e $out_dir){
     die("Error: output directory \"$out_dir\" already exists.
-To avoid overwriting of existing files. We kindly request that the
+To avoid overwriting of existing files, we kindly request that the
  output directory should not exist.");
 }
 
